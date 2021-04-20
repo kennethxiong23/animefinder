@@ -7,7 +7,7 @@ headers = {
     'x-rapidapi-host': "imdb8.p.rapidapi.com"
     }
 
-conn.request("GET", "/auto-complete?q=fruits%20basket", headers=headers)
+conn.request("GET", "/auto-complete?q=vivy%20flourites", headers=headers)
 
 res = conn.getresponse()
 data = res.read()
