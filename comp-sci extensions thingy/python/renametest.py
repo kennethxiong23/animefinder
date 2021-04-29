@@ -10,7 +10,7 @@ dict = jikan.anime(14719)
 hash = dict['title']
 #print(hash)
 
-test = jikan.search('anime', 'Jojo', )
+test = jikan.search('anime', 'vivy', )
 x = test['results']
 titles = []
 for i in  x:
