@@ -7,8 +7,8 @@
 </br>Search here:
 <input type = 'text' id = 'name'>
 <button> Try it </button>
-
-<p id = 'show1'> Show1</p> 
+</br>
+<img id = 'show1' > </img> 
 <p id = 'show2'> Show2</p>
 
 </br>
@@ -17,7 +17,11 @@
 
 <script src = "./scripts/mal.js"></script>
 <script>
-findSeasonal(4, 'winter', '2018');
+var  obj =  new anime('Re:Zero kara Hajimeru Isekai Seikatsu')
+obj.image.then(response =>{
+    document.getElementById('show1').src = response
+})
+
 </script>
 
 

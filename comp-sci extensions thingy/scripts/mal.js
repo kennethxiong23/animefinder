@@ -15,22 +15,36 @@
 // 	console.error(err);
 // });
 class anime{
-    constructor(show){
-        this.malId = show.mal_id;
-        this.title = show.title;
-        this.image = show.image_url;
+    constructor(title){
+        this.title = title;
+        this.malStat = search(this.title);
     }
-    get title(){
-        return this.title;
+    get malId(){
+        var promise = this.malStat
+        .then(response => {
+            response = response.mal_id;
+            return response;
+        });
+        return promise;
+    }
+    get image(){
+        var promise = this.malStat
+        .then(response => {
+            response = response.image_url;
+            return response;
+        });
+        return promise;
+
+    
     }
 
 }
+async function search(title){
+    console.log(title)
+    var query = formatQuery(title);
+    var url = "https://jikan1.p.rapidapi.com/search/anime?q=" + query;
 
-function findSeasonal(numResults, season, year){
-    var url = "https://jikan1.p.rapidapi.com/season/" + year + "/" + season 
-    var results
-    
-    fetch(url, {
+     var  results =  await fetch(url, {
         "method": "GET",
         "headers": {
             "Access-Control-Allow-Origin" : "*",
@@ -40,21 +54,58 @@ function findSeasonal(numResults, season, year){
     })
     .then(response => response.json())
     .then(data => {
-        
-        results = data.anime;
-        console.log(results[0])
-    })
-    .catch(err => {
-        
-        console.error(err);
+        console.log(data)
+        data  = data.results[0];
+        return data;
     });
-    var i;
-    for (i = 0; i < numResults + 1; i++ ){
-        console.log(i);
-        console.log(results[i]);
-        const obj = new anime(results[i]);
-        console.log(obj.title);
-        
-    }
+return await results;
+
+
+// if (results.ok){
+//     let json = await results.text()
+//     // console.log(json)
+//     return json
+// }
+// // console.log(results)
+// return results
 
 }
+
+function formatQuery (title){
+    var query;
+    for (char in title){
+        if (title[char] == ' '){
+            query = query + '%20';
+            
+        }
+        else{
+            query = query + title[char];
+        }
+    }
+    return query;
+}
+// function findSeasonal(numResults, season, year){
+//     var url = "https://jikan1.p.rapidapi.com/season/" + year + "/" + season;
+//     var results;
+//     var bob ;
+    
+//     results = fetch(url, {
+//         "method": "GET",
+//         "headers": {
+//             "Access-Control-Allow-Origin" : "*",
+//             "x-rapidapi-key": "aff643c273msh3d6967dd0beb0dfp12ee72jsn8d22081193e0",
+//             "x-rapidapi-host": "jikan1.p.rapidapi.com"
+//         }
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+        
+//        bob = getData(data.anime, numResults);
+//        console.log(bob)
+  
+
+//     })
+//     .catch(err => {
+        
+//         console.error(err);
+//     });
