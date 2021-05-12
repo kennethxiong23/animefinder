@@ -1,20 +1,5 @@
 
-// fetch("https://jikan1.p.rapidapi.com/top/anime/1/upcoming", {
-// 	"method": "GET",
-// 	"headers": {
-// 		"x-rapidapi-key": "aff643c273msh3d6967dd0beb0dfp12ee72jsn8d22081193e0",
-// 		"x-rapidapi-host": "jikan1.p.rapidapi.com"
-// 	}
-// })
-// .then(response => response.json())
-// .then(data => {
-//     console.log(data)
-// })
-// .catch(err => {
-    
-// 	console.error(err);
-// });
-class anime{
+ class anime{
     constructor(title){
         this.title = title;
         this.query = formatQuery(title)
@@ -108,20 +93,11 @@ async function search(title){
     });
 return await results;
 
-
-// if (results.ok){
-//     let json = await results.text()
-//     // console.log(json)
-//     return json
-// }
-// // console.log(results)
-// return results
-
 }
 
 function formatQuery (title){
     var query = '';
-    var letters = "qwertyuioplkjhgfdsazxcvbnm"
+    var letters = "qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM"
     for (let char of title){
         if (char == ' '){
             query = query + '%20';
@@ -136,34 +112,5 @@ function formatQuery (title){
     }
     return query;
 }
-// function findSeasonal(numResults, season, year){
-//     var url = "https://jikan1.p.rapidapi.com/season/" + year + "/" + season;
-//     var results;
-//     var bob ;
-    
-//     results = fetch(url, {
-//         "method": "GET",
-//         "headers": {
-//             "Access-Control-Allow-Origin" : "*",
-//             "x-rapidapi-key": "aff643c273msh3d6967dd0beb0dfp12ee72jsn8d22081193e0",
-//             "x-rapidapi-host": "jikan1.p.rapidapi.com"
-//         }
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-        
-//        bob = getData(data.anime, numResults);
-//        console.log(bob)
-  
 
-//     })
-//     .catch(err => {
-        
-//         console.error(err);
-//     });
-var obj = new anime("rent a girlfriend")
-obj.malStat("image_url")
-.then(response =>{
-    document.getElementById("image1").innerHTML = 'bob'
-    console.log(response)
-})
+export {anime};
