@@ -39,7 +39,14 @@
         // var vrv = searchWeb("vrv.co");
         // var hidive = searchWeb("hidive.com");
         // var crunchyRoll = searchWeb("crunchyroll.com");
-        // var utelly = utellySites(this.title);
+        var utellyWatch = this.imdbId()
+        .then(response =>{
+            console.log(response)
+            var utelly = utellySites(response);
+            console.log(utelly)
+        })
+        
+       
         // var watchMode = watchModeSites(this.title);
         console.log("anime.availSites");
 
@@ -72,13 +79,48 @@ async  getEpisode(){
     })
      return await episodes
 
-//return await episodes;
+
 }   
 }
+async function utellySites(imdbId){
+    var url  = "https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=" + imdbId + "&source=imdb&country=us"
+    console.log(url)
+    var results = await fetch(url, {
+        "method": "GET",
+        "headers" : {
+            "Access-Control-Allow-Origin" : "*",
+            "x-rapidapi-key": "aff643c273msh3d6967dd0beb0dfp12ee72jsn8d22081193e0",
+            "x-rapidapi-host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com"
+        }
 
+    })
+    .then(response => response.json())
+    .then(data => {
+        data = data.collection.locations
+        var sites = [];
+        for (let result of data){
+            if (result.display_name == "Hulu" || result.display_name == "Netflix" || result.display_name == "Amazon Prime Video" || result.display_name == "Amazon Instant Video" || result.display_name == "iTunes" || result.display_name == "Google Play"){
+            var show = {
+                name : result.display_name,
+                url : result.url
+            }
+            console.log(result)
+            sites.push(show)
+        }
+    }
+    
+        console.log(sites);
+        return sites
+    })
+    .catch((error) =>{
+        var sites = []
+        return sites
+    })
+    return results
+}
 async function search(title){
     var url = "https://jikan1.p.rapidapi.com/search/anime?q=" + title;
-     var  results =  await fetch(url, {
+    var  results =  await fetch(url, {
         "method": "GET",
         "headers": {
             "Access-Control-Allow-Origin" : "*",

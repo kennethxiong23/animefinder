@@ -63,10 +63,11 @@ for (const item of keys){
     keyNum.push(item)
 }
 
+
 var  randomIndex = keyNum[Math.floor(Math.random() * keyNum.length)]; //select random genre
 var amountOfShows = 4;
 
-document.getElementById("recGenre").innerHTML = "Check out top shows from " + genre[randomIndex];
+document.getElementById("recGenre").innerHTML = "Check out top shows from " + genre[randomIndex - 1];
 var shows = recShows(randomIndex, amountOfShows) //get promise of shows from api
 .then(response =>{
     var spotNum
@@ -74,6 +75,7 @@ var shows = recShows(randomIndex, amountOfShows) //get promise of shows from api
         console.log(spotNum+1)
          let image = response[spotNum].malStat("image_url")
          let title = response[spotNum].malStat("title")
+         console.log(response[spotNum].availSites())
          displayShows(image, title, spotNum+1)
 }
 })
