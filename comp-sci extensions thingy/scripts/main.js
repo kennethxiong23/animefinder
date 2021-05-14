@@ -1,6 +1,6 @@
 
 import {anime} from "../modules/mal.js"
-let genre = [
+var genre = [ // array of possible genres to chose from
     "action",
     "adventure",
     "cars",
@@ -9,10 +9,10 @@ let genre = [
     "demons",
     "mystery",
     "drama",
-    "ecchi",
+    "null",
     "fantasy",
     "game",
-    "hentai",
+    "null",
     "historical",
     "horror",
     "kids",
@@ -22,20 +22,20 @@ let genre = [
     "music",
     "parody",
     "samurai",
-    "romance",
+    "null",
     "school",
     "sci fi",
     "shoujo",
-    "shoujo ai",
+    "null",
     "shounen",
-    "shounen ai",
+    "null",
     "space",
     "sports",
     "super power",
     "vampire",
-    "yaoi",
-    "yuri",
-    "harem",
+    "null",
+    "null",
+    "null",
     "slice of life",
     "supernatural",
     "military",
@@ -45,29 +45,50 @@ let genre = [
     "seinen",
     "josei"
 ]
-var  randomIndex = Math.floor(Math.random() * genre.length);
-if (randomIndex == 12){
-    randomIndex = 1;
-}
-var amountOfShows = 4;
-document.getElementById("recGenre").innerHTML = "Check out top shows from " + genre[randomIndex];
-var shows = recShows(randomIndex +1, amountOfShows)
-.then(response =>{
-    var d
-    for (d = 0; d<amountOfShows; d++){
-        console.log(d+1)
-         var show = response[d].malStat("image_url")
-         displayShows(show, d+1)
-        
 
+var recGenre = new Map() //assign them to specifc key on map, api call uses number not name
+var index = 0;
+for (index; index < genre.length; index ++ ){ //make sure that the inapropriate ones are not shown
+    if (genre[index] == "null"){
+        console.log('null')
+    }
+    else{
+    recGenre.set(index + 1, genre[index])
+    }
+
+}
+var keys = recGenre.keys()
+var keyNum = [] //convert iterable map obj to array
+for (const item of keys){
+    keyNum.push(item)
+}
+
+var  randomIndex = keyNum[Math.floor(Math.random() * keyNum.length)]; //select random genre
+var amountOfShows = 4;
+
+document.getElementById("recGenre").innerHTML = "Check out top shows from " + genre[randomIndex];
+var shows = recShows(randomIndex, amountOfShows) //get promise of shows from api
+.then(response =>{
+    var spotNum
+    for (spotNum = 0; spotNum<amountOfShows; spotNum++){
+        console.log(spotNum+1)
+         let image = response[spotNum].malStat("image_url")
+         let title = response[spotNum].malStat("title")
+         displayShows(image, title, spotNum+1)
 }
 })
 
-async function displayShows(show, index){  
+// show the shows, loading might be slow, api only allows 2 calles per second
+ function displayShows(show, title, index){  
     let imagePromise =  show
     .then(response =>{
         console.log('show' + index)
         document.getElementById('show' + String(index)).src = response
+    })
+    let titlePromise = title
+    .then(response =>{
+        console.log(response)
+        document.getElementById('title' + String(index)).innerHTML = response
     })
 }
 
@@ -76,7 +97,6 @@ async function displayShows(show, index){
 
 
 async function recShows(genreId, amount){
-   
     var url = "https://jikan1.p.rapidapi.com/genre/anime/" + genreId + "/1";
      var  results =  await fetch(url, {
         "method": "GET",
@@ -91,7 +111,6 @@ async function recShows(genreId, amount){
         var shows = [];
         let i;
         for (i = 0; i<amount; i++){
-            console.log('hey')
             shows.push( new anime(data.anime[i].title))
         }
         return shows;
