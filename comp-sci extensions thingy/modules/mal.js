@@ -42,8 +42,9 @@
         var utellyWatch = this.imdbId()
         .then(response =>{
             console.log(response)
-            var utelly = utellySites(response);
+            let utelly = utellySites(response);
             console.log(utelly)
+            return utelly
         })
         
        
@@ -99,7 +100,9 @@ async function utellySites(imdbId){
         data = data.collection.locations
         var sites = [];
         for (let result of data){
-            if (result.display_name == "Hulu" || result.display_name == "Netflix" || result.display_name == "Amazon Prime Video" || result.display_name == "Amazon Instant Video" || result.display_name == "iTunes" || result.display_name == "Google Play"){
+            if (result.display_name == "Hulu" || result.display_name == "Netflix" 
+            || result.display_name == "Amazon Prime Video" || result.display_name == "Amazon Instant Video" 
+            || result.display_name == "iTunes" || result.display_name == "Google Play" || result.display_name == "HBO Max"){
             var show = {
                 name : result.display_name,
                 url : result.url
@@ -154,5 +157,6 @@ function formatQuery (title){
     }
     return query;
 }
+
 
 export {anime};

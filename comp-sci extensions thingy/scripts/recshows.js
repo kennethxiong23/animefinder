@@ -36,7 +36,8 @@ var genre = [ // array of possible genres to chose from can i make this an array
     [42,"seinen"],
     [43,"josei"]
 ]
-
+var obj = new anime ("wheathering with you")
+console.log(obj)
 var  randomGenre = genre[Math.floor(Math.random() * genre.length)]; //select random genre
 var amountOfShows = 4;
 
