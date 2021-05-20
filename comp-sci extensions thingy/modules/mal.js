@@ -35,20 +35,12 @@
     }
 
     availSites(){
-        // var fun = searchWeb("funimation.com");
-        // var vrv = searchWeb("vrv.co");
-        // var hidive = searchWeb("hidive.com");
-        // var crunchyRoll = searchWeb("crunchyroll.com");
-        var utellyWatch = this.imdbId()
-        .then(response =>{
-            console.log(response)
-            let utelly = utellySites(response);
-            console.log(utelly)
-            return utelly
-        })
+        var animeSites = searchWeb(this.title)
+        var utellyWatch = utellySites(this.imdbId())
         
-       
-        // var watchMode = watchModeSites(this.title);
+        
+       return animeSites
+        
         console.log("anime.availSites");
 
         // var availSites = Promise.all([fun, vrv, hidive, crunchyRoll, utelly, watchMode]);
@@ -83,10 +75,36 @@ async  getEpisode(){
 
 }   
 }
+async function searchWeb(title){
+    let url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDvDsw3M1OYZg3oycCb8__TXv39TLzalhY&cx=7071425502d0f8570&&num=10&q=" + title
+    let results = await fetch (url, {
+        "method" : "GET"
+    })
+    .then(response => response.json ())
+    .then(data =>{
+        let sites = []
+        for (let result of data.items){
+            if (result.title.indexOf("Watch On") != -1 || result.title.indexOf("Stream") != -1){
+                let name = result.displayLink.replace("www.", "")
+                name = name.replace(".com", "")
+                // new show = {
+                //     name : name,
+                //     url : result.formattedUrl
+                // }
+            }
+
+        }
+        console.log(data)
+        return data
+    })
+    return results
+}
 async function utellySites(imdbId){
-    var url  = "https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=" + imdbId + "&source=imdb&country=us"
+    imdbId
+    .then(response => {
+    let url  = "https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=" + response + "&source=imdb&country=us"
     console.log(url)
-    var results = await fetch(url, {
+    let results =  fetch(url, {
         "method": "GET",
         "headers" : {
             "Access-Control-Allow-Origin" : "*",
@@ -120,7 +138,10 @@ async function utellySites(imdbId){
         return sites
     })
     return results
+})
+return imdbId;
 }
+
 async function search(title){
     var url = "https://jikan1.p.rapidapi.com/search/anime?q=" + title;
     var  results =  await fetch(url, {
