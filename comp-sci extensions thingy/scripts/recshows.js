@@ -42,26 +42,19 @@ var  randomGenre = genre[Math.floor(Math.random() * genre.length)]; //select ran
 var amountOfShows = 4;
 
 document.getElementById("recGenre").innerHTML = "Check out top shows from " + randomGenre[1];
-chrome.runtime.onStartup.addListener(function (){
-    var recShows = recShows( randomGenre[0], amountOfShows) //get promise of shows from api
-    chrome.storage.local.set({"recShows" : recShows})
-    
+var shows = recShows( randomGenre[0], amountOfShows) //get promise of shows from api
+.then(response =>{
+    var spotNum
+    for (spotNum = 0; spotNum<amountOfShows; spotNum++){
+        console.log(spotNum+1)
+         let image = response[spotNum].malStat("image_url")
+         let title = response[spotNum].malStat("title")
+         console.log(response[spotNum].availSites())
+         displayShows(image, title, spotNum+1)
+     
+}
+return response
 })
-chrome.storage.local.get(['recShows'], (result =>{
-    let shows = result.recShows
-    .then(response =>{
-        var spotNum
-        for (spotNum = 0; spotNum<amountOfShows; spotNum++){
-            console.log(spotNum+1)
-             let image = response[spotNum].malStat("image_url")
-             let title = response[spotNum].malStat("title")
-             console.log(response[spotNum].availSites())
-             displayShows(image, title, spotNum+1)
-        }
-        return response 
-})
-}))
-
 document.getElementById("link1").onclick = function() { showClicked(shows, 1)};
 document.getElementById("link2").onclick = function() { showClicked(shows, 2)};
 document.getElementById("link3").onclick = function() { showClicked(shows, 3)};

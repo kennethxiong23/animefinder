@@ -76,7 +76,7 @@ async  getEpisode(){
 }   
 }
 async function searchWeb(title){
-    let url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDvDsw3M1OYZg3oycCb8__TXv39TLzalhY&cx=7071425502d0f8570&&num=10&q=" + title
+    let url = "https://www.googleapis.com/customsearch/v1/siterestrict?key=AIzaSyDvDsw3M1OYZg3oycCb8__TXv39TLzalhY&lr=en&cx=7071425502d0f8570&&q=" + title
     let results = await fetch (url, {
         "method" : "GET"
     })
@@ -84,18 +84,20 @@ async function searchWeb(title){
     .then(data =>{
         let sites = []
         for (let result of data.items){
-            if (result.title.indexOf("Watch On") != -1 || result.title.indexOf("Stream") != -1){
+            console.log(result.title.indexOf("Watch on"))
+            if (result.title.indexOf("Watch on") != -1 || result.title.indexOf("Stream") != -1){
                 let name = result.displayLink.replace("www.", "")
                 name = name.replace(".com", "")
-                // new show = {
-                //     name : name,
-                //     url : result.formattedUrl
-                // }
+                
+                var show = {
+                    name : name,
+                    url : result.formattedUrl
+                }
+                sites.push(show)
             }
 
         }
-        console.log(data)
-        return data
+        return sites
     })
     return results
 }
