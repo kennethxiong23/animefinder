@@ -1,4 +1,5 @@
 import {anime} from "../modules/mal.js"
+chrome.storage.local.set({"page" : "home"})
 var genre = [ // array of possible genres to chose from can i make this an array of array
     [1,"action"],
     [2,"adventure"],
