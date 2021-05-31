@@ -1,5 +1,9 @@
 import {anime} from "../modules/mal.js"
 chrome.storage.local.set({"page" : "home"})
+chrome.runtime.sendMessage({startup: true});
+chrome.runtime.onMessage.addListener(function(response){
+    window.location.href = "../animepage.html"
+})
 var genre = [ // array of possible genres to chose from can i make this an array of array
     [1,"action"],
     [2,"adventure"],
