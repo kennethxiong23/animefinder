@@ -38,12 +38,8 @@
         var animeSites = searchWeb(this.title)
         var utellyWatch = utellySites(this.imdbId())
         
+       return Promise.all([animeSites, utellyWatch])
         
-       return animeSites
-        
-        console.log("anime.availSites");
-
-        // var availSites = Promise.all([fun, vrv, hidive, crunchyRoll, utelly, watchMode]);
         
     }
 
