@@ -1,11 +1,4 @@
-
-let color = '#3aa757';
-
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ color });
-  console.log('Default background color set to %cgreen', `color: ${color}`);
-});
+//adds listener to debug the storage api
 chrome.storage.onChanged.addListener(function (changes, namespace) {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
     console.log(newValue)
@@ -16,14 +9,16 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
   }
 });
 
+//listener to check when the extension has been run to make see if it is on a mal page
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 let currentTab = getCurrentTab()
 .then(data =>{
   let url = data[0].url
-  console.log(url)
+  //if on a mal anime site, go straight to the stat page
   if  (url.indexOf("myanimelist.net/anime/") != -1){
     let title = url.replace("https://myanimelist.net/anime/", "")
     title = title.slice(title.indexOf('/') + 1)
+    //acummulator to slice the url into an anime title
     let animeTitle = "";
     for (let char of title){
       if (char == '_'){
@@ -33,17 +28,20 @@ let currentTab = getCurrentTab()
         animeTitle = animeTitle + char
       }
     }
+    //save the anime title to the storage api so it can be called on another page
     chrome.storage.local.set({"show" : animeTitle, "page" : "home"})
+    //message homepage to upadate html page
     chrome.runtime.sendMessage({updatePopup: true})
   }
-  else{
-    chrome.action.setPopup({
-      popup: "animefinder.html"
-  });
-  }
 });
 });
+
 async function getCurrentTab() {
+  /*
+  Description: Gets the current tab that the user is one
+  Parameters: none
+  Return Val: Current tab(obj)
+  */
   let queryOptions = { active: true, currentWindow: true };
   let tab = await chrome.tabs.query(queryOptions);
   return tab;

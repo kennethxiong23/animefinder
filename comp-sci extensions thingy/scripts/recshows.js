@@ -1,10 +1,18 @@
+/*
+    Description: This program displays the top anime from a recommend genre,
+    Name: Kenneth
+    Date: Spring 2021
+*/
 import {anime} from "../modules/mal.js"
-chrome.storage.local.set({"page" : "home"})
-chrome.runtime.sendMessage({startup: true});
+
+chrome.storage.local.set({"page" : "home"}) //make it so it comes back to the home page
+chrome.runtime.sendMessage({startup: true}); //tell background.js that the extension started
+//change the html page if it's on a MAL anime page
 chrome.runtime.onMessage.addListener(function(response){
     window.location.href = "../statpage.html"
 })
-var genre = [ // array of possible genres to chose from can i make this an array of array
+
+let genre = [ // array of possible genres to chose from
     [1,"action"],
     [2,"adventure"],
     [3,"cars"],
@@ -41,15 +49,15 @@ var genre = [ // array of possible genres to chose from can i make this an array
     [42,"seinen"],
     [43,"josei"]
 ]
-var obj = new anime ("wheathering with you")
-console.log(obj)
-var  randomGenre = genre[Math.floor(Math.random() * genre.length)]; //select random genre
-var amountOfShows = 4;
+
+let  randomGenre = genre[Math.floor(Math.random() * genre.length)]; //select random genre
+//how many shows to display
+let amountOfShows = 4;
 
 document.getElementById("recGenre").innerHTML = "Check out top shows from " + randomGenre[1];
-var shows = recShows( randomGenre[0], amountOfShows) //get promise of shows from api
+let shows = recShows( randomGenre[0], amountOfShows) //get promise of shows from api
 .then(response =>{
-    var spotNum
+    let spotNum
     for (spotNum = 0; spotNum<amountOfShows; spotNum++){
         console.log(spotNum+1)
          let image = response[spotNum].malStat("image_url")
@@ -60,22 +68,33 @@ var shows = recShows( randomGenre[0], amountOfShows) //get promise of shows from
 }
 return response
 })
+//store the show that was clicked in the storage api
 document.getElementById("link1").onclick = function() { showClicked(shows, 1)};
 document.getElementById("link2").onclick = function() { showClicked(shows, 2)};
 document.getElementById("link3").onclick = function() { showClicked(shows, 3)};
 document.getElementById("link4").onclick = function() { showClicked(shows, 4)};
- function showClicked(array, index){
-    
-    var promise = array
+function showClicked(array, index){
+    /*
+    Description: Stores the data of the clicked anime in the storage api
+    Parameters: list of anime(array), index of the clicked show(int)
+    Return Val
+    */
+    let promise = array
     .then(response =>{
-        var show = response[index - 1]
+        let show = response[index - 1]
         console.log(index-1)
         chrome.storage.local.set({"show" : show})
     })
 
-}
+    }
+
 // show the shows, loading might be slow, api only allows 2 calles per second
  function displayShows(show, title, index){  
+     /*
+    Description: Load the image and title of the anime with as a clickable hyper link
+    Parameters: image(str), title(Str). index(int)
+    Return Val: non
+    */ 
     let imagePromise =  show
     .then(response =>{
         console.log('show' + index)
@@ -88,13 +107,14 @@ document.getElementById("link4").onclick = function() { showClicked(shows, 4)};
     })
 }
 
-
-
-
-
 async function recShows(genreId, amount){
-    var url = "https://jikan1.p.rapidapi.com/genre/anime/" + genreId + "/1";
-     var  results =  await fetch(url, {
+    /*
+    Description: Gets an array of shows from a specifc genre
+    Paramters: The genre id(int), how many shows to get(int)
+    Return Val: array of results(array)
+    */
+    let url = "https://jikan1.p.rapidapi.com/genre/anime/" + genreId + "/1";
+     let  results =  await fetch(url, {
         "method": "GET",
         "headers": {
             "Access-Control-Allow-Origin" : "*",
@@ -104,9 +124,8 @@ async function recShows(genreId, amount){
     })
     .then(response => response.json())
     .then(data => {
-        var shows = [];
-        let i;
-        for (i = 0; i<amount; i++){
+        let shows = [];
+        for (let i = 0; i<amount; i++){
             shows.push( new anime(data.anime[i].title))
         }
         return shows;
