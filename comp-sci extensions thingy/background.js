@@ -18,6 +18,7 @@ let currentTab = getCurrentTab()
   if  (url.indexOf("myanimelist.net/anime/") != -1){
     let title = url.replace("https://myanimelist.net/anime/", "")
     title = title.slice(title.indexOf('/') + 1)
+    title = title.slice(0, title.indexOf('?') )
     //acummulator to slice the url into an anime title
     let animeTitle = "";
     for (let char of title){

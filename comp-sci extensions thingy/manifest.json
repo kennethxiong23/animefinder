@@ -1,6 +1,6 @@
 {
     "name": "Anime Finder",
-    "description": "Find where to wathc anime",
+    "description": "Find where to watch anime",
     "version": "1.0",
     "manifest_version": 3,
     "background": {

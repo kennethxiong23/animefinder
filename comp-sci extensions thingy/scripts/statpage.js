@@ -55,6 +55,9 @@ chrome.storage.local.get(['show'], (result => {
             document.getElementById(img).height = 64
             document.getElementById(link).innerHTML = sites.name
             document.getElementById(href).href = sites.url
+            document.getElementById(href).onclick = function(){
+                chrome.tabs.create({ url: sites.url });
+            }
           }
         }
     })
